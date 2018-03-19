@@ -1,8 +1,3 @@
-# twitch_app
+# Twitch.TV
 
-Twitch TV app recreated in Flutter
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+Twitch TV app replicated in Flutter
