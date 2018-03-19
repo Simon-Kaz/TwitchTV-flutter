@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-void main() => runApp(new MyApp());
+void main() =>
+    runApp(new MyApp());
 
 class MyApp extends StatelessWidget {
   @override
@@ -44,8 +45,6 @@ class MyApp extends StatelessWidget {
 }
 
 class TwitchMain extends StatefulWidget {
-  TwitchMain({Key key, this.title}) : super(key: key);
-  final String title;
 
   @override
   _TwitchMainState createState() => new _TwitchMainState();
@@ -120,6 +119,14 @@ class _TwitchMainState extends State<TwitchMain> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final List<ListItem> items = new List<ListItem>.generate(
+      1000,
+          (i) =>
+      i % 6 == 0
+          ? new HeadingItem("Heading $i")
+          : new ChannelItem("previewImg $i", i, "channelLogo $i", "channelName $i", "streamTitle $i", "gameTitle $i"),
+    );
+
     final BottomNavigationBar botNavBar = new BottomNavigationBar(
       items: _navigationViews
           .map((NavigationIconView navigationView) => navigationView.item)
@@ -136,9 +143,30 @@ class _TwitchMainState extends State<TwitchMain> with TickerProviderStateMixin {
     );
 
     return new Scaffold(
-      body: new Center(
-          child: _buildTransitionsStack()
+      body: new ListView.builder(
+        itemCount: items.length,
+
+        itemBuilder: (context, index) {
+          final item = items[index];
+
+          if (item is HeadingItem) {
+            return new ListTile(
+              title: new Text(
+                item.heading,
+                style: Theme.of(context).textTheme.headline,
+              ),
+            );
+          } else if (item is ChannelItem) {
+            return new ListTile(
+              title: new Text(item.channelName),
+              subtitle: new Text(item.viewerCount.toString()),
+            );
+          }
+        },
       ),
+//      body: new Center(
+//          child: _buildTransitionsStack()
+//      ),
       bottomNavigationBar: botNavBar,
     );
   }
@@ -213,7 +241,6 @@ class NavigationIconView {
 }
 
 
-
 // The base class for the different types of items the List can contain
 abstract class ListItem {}
 
@@ -233,5 +260,6 @@ class ChannelItem implements ListItem {
   final String streamTitle;
   final String gameTitle;
 
-  ChannelItem(this.previewImg, this.viewerCount, this.channelLogo, this.channelName, this.streamTitle, this.gameTitle);
+  ChannelItem(this.previewImg, this.viewerCount, this.channelLogo,
+      this.channelName, this.streamTitle, this.gameTitle);
 }
